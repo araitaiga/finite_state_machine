@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "finite-state-machine"
+version = "0.1.0"
+description = ""
+authors = ["Taiga Arai <taiga.arai@whill.inc>"]
+readme = "README.md"
+packages = [{include = "finite_state_machine"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
