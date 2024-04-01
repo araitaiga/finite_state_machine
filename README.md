@@ -3,17 +3,23 @@
 ![finite_state_machine_uml](./docs/finite_state_machine_uml.png)
 
 
-Setup
+### Setup
+This package is managed using poetry. However, there are no dependencies on other packages, so it can simply be executed by python3 command.
 ```
 poetry install
 ```
 
-How to run
+### How to run
 ```
 poetry run python finite_state_machine/main.py
 ```
 
-output
+or just
+```
+python3 finite_state_machine/main.py
+```
+
+### output
 ```
 ===== Start FiniteStateMachine =====
 ChatterState is initialized
