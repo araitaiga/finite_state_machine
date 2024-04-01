@@ -18,13 +18,13 @@ class ClockCounter:
     time_now = 0
 
     @classmethod
-    def countUp(cls):
+    def count_up(cls):
         cls.time_now += 1
         if cls.time_now >= 12:
             cls.time_now = 0
 
     @classmethod
-    def getTime(cls):
+    def get_time(cls):
         return cls.time_now
 
 
@@ -86,7 +86,7 @@ class TimeRangeCondition(Condition):
         return now >= time_range.time_min and now <= time_range.time_max
 
     def test(self):
-        now = ClockCounter.getTime()
+        now = ClockCounter.get_time()
         for time_range in self.time_ranges:
             if self.__within_time_range(time_range, now):
                 return True
@@ -116,19 +116,19 @@ class StateBuilder:
 
 class State(ABC):
     @abstractmethod
-    def getActions(self):
+    def get_actions(self):
         pass
 
     @abstractmethod
-    def getEntryActions(self):
+    def get_entry_actions(self):
         pass
 
     @abstractmethod
-    def getExitActions(self):
+    def get_exit_actions(self):
         pass
 
     @abstractmethod
-    def getTransitions(self):
+    def get_transitions(self):
         pass
 
 
@@ -140,16 +140,16 @@ class ChatterState(State):
         self.exit_actions = [ChatterAction("Exit")]
         self.transitions = [ChatterTransition()]
 
-    def getActions(self):
+    def get_actions(self):
         return self.actions
 
-    def getEntryActions(self):
+    def get_entry_actions(self):
         return self.entry_actions
 
-    def getExitActions(self):
+    def get_exit_actions(self):
         return self.exit_actions
 
-    def getTransitions(self):
+    def get_transitions(self):
         return self.transitions
 
 
@@ -161,16 +161,16 @@ class QuietState(State):
         self.exit_actions = [QuietAction("Exit")]
         self.transitions = [QuietTransition()]
 
-    def getActions(self):
+    def get_actions(self):
         return self.actions
 
-    def getEntryActions(self):
+    def get_entry_actions(self):
         return self.entry_actions
 
-    def getExitActions(self):
+    def get_exit_actions(self):
         return self.exit_actions
 
-    def getTransitions(self):
+    def get_transitions(self):
         return self.transitions
 
 
@@ -182,30 +182,30 @@ class DummyState(State):
         self.exit_actions = [DummyAction("Exit")]
         self.transitions = [DummyTransition()]
 
-    def getActions(self):
+    def get_actions(self):
         return self.actions
 
-    def getEntryActions(self):
+    def get_entry_actions(self):
         return self.entry_actions
 
-    def getExitActions(self):
+    def get_exit_actions(self):
         return self.exit_actions
 
-    def getTransitions(self):
+    def get_transitions(self):
         return self.transitions
 
 
 class Transition(ABC):
     @abstractmethod
-    def isTriggered(self):
+    def is_triggered(self):
         pass
 
     @abstractmethod
-    def getActions(self):
+    def get_actions(self):
         pass
 
     @abstractmethod
-    def getTargetState(self):
+    def get_target_state(self):
         pass
 
 
@@ -218,13 +218,13 @@ class ChatterTransition(Transition):
         self.to_quiet_condition = TimeRangeCondition([TimeRange(2, 2)])
         self.to_dummy_condition = TimeRangeCondition([TimeRange(6, 6)])
 
-    def isTriggered(self):
+    def is_triggered(self):
         return self.to_quiet_condition.test() or self.to_dummy_condition.test()
 
-    def getActions(self):
+    def get_actions(self):
         return self.actions
 
-    def getTargetState(self):
+    def get_target_state(self):
         if self.to_quiet_condition.test():
             return self.target_state_quiet
         elif self.to_dummy_condition.test():
@@ -242,13 +242,13 @@ class QuietTransition(Transition):
             [TimeRange(4, 4), TimeRange(9, 9)]
         )
 
-    def isTriggered(self):
+    def is_triggered(self):
         return self.to_chatter_condition.test()
 
-    def getActions(self):
+    def get_actions(self):
         return self.actions
 
-    def getTargetState(self):
+    def get_target_state(self):
         return self.target_state
 
 
@@ -257,13 +257,13 @@ class DummyTransition(Transition):
         self.actions = [DummyAction("Transition from")]
         self.target_state = StateType.QUIET
 
-    def isTriggered(self):
+    def is_triggered(self):
         return True
 
-    def getActions(self):
+    def get_actions(self):
         return self.actions
 
-    def getTargetState(self):
+    def get_target_state(self):
         return self.target_state
 
 
@@ -277,21 +277,21 @@ class FiniteStateMachine:
         # return Action list to execute
         triggered_transition = None
 
-        for transition in self.current_state.getTransitions():
-            if transition.isTriggered():
+        for transition in self.current_state.get_transitions():
+            if transition.is_triggered():
                 triggered_transition = transition
                 break
         # Check if we have a transition to fire
         if triggered_transition is None:
-            return self.current_state.getActions()
+            return self.current_state.get_actions()
         else:
 
-            exit_actions = self.current_state.getExitActions()
-            triggered_actions = triggered_transition.getActions()
+            exit_actions = self.current_state.get_exit_actions()
+            triggered_actions = triggered_transition.get_actions()
 
-            target_state_type = triggered_transition.getTargetState()
+            target_state_type = triggered_transition.get_target_state()
             target_state = StateBuilder.build(target_state_type)
-            entry_actions = target_state.getEntryActions()
+            entry_actions = target_state.get_entry_actions()
             actions = exit_actions + triggered_actions + entry_actions
 
             self.current_state = target_state
@@ -309,7 +309,7 @@ def main():
         for action in actions:
             action.execute()
 
-        ClockCounter.countUp()
+        ClockCounter.count_up()
     print("===== Finish FiniteStateMachine =====")
 
 
