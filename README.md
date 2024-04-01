@@ -14,7 +14,7 @@ poetry install
 poetry run python finite_state_machine/main.py
 ```
 
-or just
+or just run
 ```
 python3 finite_state_machine/main.py
 ```
