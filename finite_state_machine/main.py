@@ -20,7 +20,7 @@ class ClockCounter:
     @classmethod
     def countUp(cls):
         cls.time_now += 1
-        if cls.time_now >= 10:
+        if cls.time_now >= 12:
             cls.time_now = 0
 
     @classmethod
@@ -82,10 +82,13 @@ class TimeRangeCondition(Condition):
     def __init__(self, time_ranges):
         self.time_ranges = time_ranges
 
+    def __within_time_range(self, time_range, now):
+        return now >= time_range.time_min and now <= time_range.time_max
+
     def test(self):
         now = ClockCounter.getTime()
         for time_range in self.time_ranges:
-            if now >= time_range.time_min and now <= time_range.time_max:
+            if self.__within_time_range(time_range, now):
                 return True
 
 
@@ -108,7 +111,7 @@ class StateBuilder:
         elif state_type == StateType.DUMMY:
             return DummyState()
         else:
-            return None
+            raise ValueError("Invalid StateType")
 
 
 class State(ABC):
@@ -236,7 +239,7 @@ class QuietTransition(Transition):
 
         self.target_state = StateType.CHATTER
         self.to_chatter_condition = TimeRangeCondition(
-            [TimeRange(4, 4), TimeRange(8, 8)]
+            [TimeRange(4, 4), TimeRange(9, 9)]
         )
 
     def isTriggered(self):
@@ -300,7 +303,7 @@ def main():
     print("===== Start FiniteStateMachine =====")
     finite_state_machine = FiniteStateMachine()
 
-    for i in range(10):
+    for i in range(12):
         print("=====Update FiniteStateMachine", i, "=====")
         actions = finite_state_machine.update()
         for action in actions:

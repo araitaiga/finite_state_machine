@@ -56,11 +56,16 @@ QuietState is initialized
 [Action] Transition from Dummy
 [Action] Entry Quiet...
 =====Update FiniteStateMachine 8 =====
+[Action] State Quiet...
+=====Update FiniteStateMachine 9 =====
 ChatterState is initialized
 [Action] Exit Quiet...
 [Action] Transition from Quiet...
 [Action] Entry Chatter!!!
-=====Update FiniteStateMachine 9 =====
+=====Update FiniteStateMachine 10 =====
+[Action] Hello
+[Action] State Chatter!!!
+=====Update FiniteStateMachine 11 =====
 [Action] Hello
 [Action] State Chatter!!!
 ===== Finish FiniteStateMachine =====
